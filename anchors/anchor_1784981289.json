@@ -1,0 +1,15 @@
+{
+  "protocol": "PETREL AI PARTY",
+  "version": "2.0",
+  "anchored_at": "2026-07-25T12:08:10Z",
+  "genesis_inscription": {
+    "政党名称": "海燕党",
+    "英文名称": "PETREL AI PARTY",
+    "创始人": "刘海燕（LIU HAIYAN）"
+  },
+  "genesis_hash_sha256": "705ebf59326a9cc1f28596d68c32a466948fe62f1d5b89ee84c772066161b9b9",
+  "repos_merkle_root": "d920cc5329776069e45d79ad4356f9e1591018e68822db6ada7d85e52e36fd0c",
+  "verified": true,
+  "statement": "此哈希证明海燕党（PETREL AI PARTY）的创世文档和六大仓库在锚定时刻的真实性。任何人可通过链上哈希验证。",
+  "anchor_hash": "100acebd11a57ee67c3d29d81cb87a9740cd808de5251f60808739227c34ea13"
+}

@@ -1,0 +1,16 @@
+{
+  "cidv0": "QmQ2SUjEZwMfzj8T9aWAHiBAKYTYnLuDPiaCkFKAJE7tF5",
+  "cidv1": "bafybeiazbulq3cbtwewpbzbsmrjfxyxgj6v7jq2p26mznzcokrwugd747q",
+  "cidv1_raw": "bb2rheCvegdmdqquPk8qwB8x46x73YA6kMdqDogLESCmSbKGk",
+  "sha256": "190d170d8833b12cf0e43264525be2e64fabf4c34fd79996e44e546d430ffcfc",
+  "content_sha256": "705ebf59326a9cc1f28596d68c32a466948fe62f1d5b89ee84c772066161b9b9",
+  "size": 3244,
+  "algorithm": "unixfs-dagpb-v2",
+  "file": "/Users/lhy/Documents/haiyan-party/GENESIS.md",
+  "uploaded": true,
+  "pinned": true,
+  "endpoint": "local-kubo-docker",
+  "node_id": "12D3KooWRkjZi92ygKmnbtZvwZEj4ui2omsj2YGGDRUvhMBwp6Ri",
+  "gateway": "http://127.0.0.1:5001",
+  "uploaded_at": "2026-08-16T10:20:15+0800"
+}

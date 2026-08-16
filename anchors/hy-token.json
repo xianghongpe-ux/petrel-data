@@ -1,0 +1,9 @@
+{
+  "contract": "0x85F8d72Bffd4828C2646Fc8d1631EF928B0F17ce",
+  "tx": "2560e182250d9b4d3c26cb65bd66291c18bf49fb11eff838d4471955d75fe605",
+  "network": "Sepolia",
+  "symbol": "HY",
+  "total_supply": "100,000,000",
+  "account": "0xc87c7aA4C5104af91C653966388c33039D4D6Cc6",
+  "vaults_initialized": false
+}

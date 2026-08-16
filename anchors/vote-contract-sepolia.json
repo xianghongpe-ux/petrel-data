@@ -1,0 +1,9 @@
+{
+  "status": "pending",
+  "contract": "PetrelVoteContract",
+  "network": "Sepolia",
+  "deployer": "0xc87c7aA4C5104af91C653966388c33039D4D6Cc6",
+  "contract_path": "/Users/lhy/Documents/haiyan-party/02-algorithm/voting/PetrelVoteContract.sol",
+  "deploy_instructions": "请在 Remix IDE 编译并部署, 或安装 solc 后重新运行此脚本",
+  "timestamp": 1784996268.7746508
+}

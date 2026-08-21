@@ -1,0 +1,11 @@
+{
+  "date": "2026-08-21",
+  "total": 7,
+  "passed": 6,
+  "failed": [
+    {
+      "name": "调度器: python dzn_scheduler.py --demo",
+      "detail": "usage: dzn_scheduler.py [-h] [--port PORT] [--bootstrap [BOOTSTRAP ...]] dzn_scheduler.py: error: unrecognized arguments: --demo "
+    }
+  ]
+}

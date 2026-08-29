@@ -6,6 +6,15 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+verify2] - 2026-08-29
+
+### 发布前验证补测（M3.3 推进 · 功能验证 7/7 全通过）
+
+- fix(dzn_scheduler): 新增 `--demo` 模式 — 任务拆分/节点综合评分/调度分配/声誉换算全部走真实代码路径，补齐发布验证 2a 项缺口
+- fix(model_consensus): `SemanticComparator` 改用 `local_files_only=True` 加载 embedding 模型 — 无本地缓存时按设计降级 Jaccard，杜绝 HuggingFace 网络下载挂起（修复 90s 超时）
+- 功能验证复跑：调度器/共识引擎/输出锁/推理节点/熔断演练/铭文守卫/IPFS CID 复算 **7/7 通过**（2026-08-29 实检）
+- 验证结果归档：`audit/func-verify-2026-08-21.json`（total=7, passed=7, failed=[]）
+
 ## [v1.0.0-rc1+verify] - 2026-08-21
 
 ### 发布前验证（M3.3 推进）

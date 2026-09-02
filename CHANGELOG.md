@@ -6,6 +6,16 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+verify3] - 2026-09-02
+
+### 发布前阻塞项闭环（二 · M3.3 推进）
+
+- fix(dashboard): `05-tool/node-deploy/dashboard/server.py` 启动崩溃修复 — CSS 花括号与 `.format()` 冲突（KeyError: ' margin'），改 `.replace()` 链式模板；实检 `/health`、`/api/status`、`/` 全部 200
+- feat(voting): 新增 `voting_server.py` — 投票客户端真实服务，修复 `python -m http.server` 无 `/health` 端点导致健康检查永不过的发布缺陷；Dockerfile voting target 同步切换
+- docs(API): 新增 `node-deploy/API.md` — 网关/投票/市场/看板/推理节点 5 服务全部端点与响应格式，闭环 release-checklist「API 端点说明」项
+- test: DZN 四模块 demo 复跑全通过（调度器 / 共识 score=0.858 / 输出锁 / 熔断演练），dashboard+voting 服务真实启动 200
+- 联动提交：`05-tool` d639668
+
 ## [v1.0.0-rc1+verify2] - 2026-08-29
 
 ### 发布前验证补测（M3.3 推进 · 功能验证 7/7 全通过）

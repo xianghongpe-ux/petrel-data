@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-02",
+  "milestone": "M3.3 全球公开发布",
+  "phase": "Phase 3 发布期",
+  "suite": "发布前阻塞项闭环（二）实检",
+  "total": 7,
+  "passed": 7,
+  "failed": [],
+  "results": [
+    {"name": "dashboard/server.py 启动崩溃修复（KeyError: ' margin'）", "ok": true, "detail": "GET /health 200 / GET /api/status 200 / GET / 200，JS 模板字面量转义正确，无残留 {{ 或 }}"},
+    {"name": "voting_server.py 新增 /health 端点", "ok": true, "detail": "GET /health 200 (min_signatures=3, gateway_url=http://gateway:8765) / GET /api/proposals 200 / GET / 200"},
+    {"name": "dzn_scheduler.py --demo 真实运行", "ok": true, "detail": "任务拆分 2 片段 / 节点综合评分分配 / 声誉换算全部走真实代码路径"},
+    {"name": "model_consensus.py --demo 真实运行", "ok": true, "detail": "score=0.858, status=achieved, validator_count=3, divergences=0 (local cache: all-MiniLM-L6-v2)"},
+    {"name": "ai_output_lock.py --demo 真实运行", "ok": true, "detail": "输出锁定 fields=5 / 人类多签 2 人 / 释放成功 / 熔断状态 normal"},
+    {"name": "circuit_breaker_drill.py --demo 真实运行", "ok": true, "detail": "5 步演练：20%故障一级熔断 → 35%故障二级熔断社区投票 → 恢复 closed"},
+    {"name": "release-checklist 更新", "ok": true, "detail": "前端加载（dashboard/voting/market）+ API 端点说明 两项闭环；offline-seed 复核备注"}
+  ],
+  "syntax_ok": 8,
+  "inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕(LIU HAIYAN)"
+  },
+  "linked_commit": "05-tool d639668"
+}

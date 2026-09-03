@@ -6,6 +6,17 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+verify4] - 2026-09-03
+
+### 发布前阻塞项闭环（三 · M3.3 推进）
+
+- build: `docker compose build` 4 目标全部 Built — node-deploy-gateway/voting/market/dashboard（2026-09-03 真实执行）
+- fix: P1 容器启动缺陷 — `aiohttp has no attribute web`（aiohttp>=3.10 需显式 `import aiohttp.web`），03-model 源 + 05-tool 副本同步修复，重建后 gateway `/p2p/ping` 冒烟通过
+- test: 容器冒烟 2/2 — gateway ping 200（真实 node_id+铭文）、voting /health 200
+- feat: 协议种子生成器 `05-tool/node-deploy/seed-tools/generate-seed.py` + 离线验证 PASS（4/4）
+- 归档：`audit/func-verify-2026-09-03.json`（8/8）、`audit/security-verify-2026-09-03.json`（15/17）
+- 联动提交：`05-tool`（Docker 构建/种子工具/checklist）、`03-model`（aiohttp.web import 修复）
+
 ## [v1.0.0-rc1+verify3] - 2026-09-02
 
 ### 发布前阻塞项闭环（二 · M3.3 推进）

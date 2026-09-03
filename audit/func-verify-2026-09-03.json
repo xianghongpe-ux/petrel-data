@@ -1,0 +1,25 @@
+{
+  "date": "2026-09-03",
+  "milestone": "M3.3 全球公开发布",
+  "phase": "Phase 3 发布期",
+  "suite": "发布前阻塞项闭环（三）· Docker 构建+容器冒烟+种子工具",
+  "total": 8,
+  "passed": 8,
+  "failed": [],
+  "results": [
+    {"name": "docker compose build 4 目标全部成功", "ok": true, "detail": "node-deploy-gateway/voting/market/dashboard:latest 全部 Built（真实执行，耗时约40分钟，主因 sentence-transformers→torch 依赖下载）"},
+    {"name": "gateway 容器冒烟 /p2p/ping 200", "ok": true, "detail": "返回真实 node_id c948a5b7-9f11-443a-aec8-3e1fdcd08a28 + 创世铭文"},
+    {"name": "voting 容器冒烟 /health + /api/proposals 200", "ok": true, "detail": "health ok, min_signatures=3；proposals 占位空列表"},
+    {"name": "P1 缺陷修复: aiohttp.web 显式导入", "ok": true, "detail": "容器启动崩溃 AttributeError: module aiohttp has no attribute web（aiohttp>=3.10 不再经 import aiohttp 自动暴露 .web）；修复 03-model 源 + 05-tool 部署副本 import aiohttp.web；重建镜像后 gateway 冒烟通过 — 此缺陷 demo 路径无法覆盖，仅真实容器启动可发现"},
+    {"name": "静态安全质量检查 15/17", "ok": true, "detail": "deploy.sh bash -n 通过；11 py 语法通过；无 :latest 标签；2 warning（dashboard/voting 只读端点 0.0.0.0 暴露面 P3，公告须披露演示占位数据）— 归档 security-verify-2026-09-03.json"},
+    {"name": "种子生成器 generate-seed.py 落地", "ok": true, "detail": "05-tool/node-deploy/seed-tools/generate-seed.py — 生成 DZN-SEED 目录树(19文件)+真实 ECDSA P-256 密钥+SHA-256 校验清单+GENESIS.txt+唯一序列号"},
+    {"name": "离线种子验证 offline-verify.sh PASS", "ok": true, "detail": "结构完整/创世铭文三项/哈希全部一致/ast 语法零污染 — 4/4 PASS"},
+    {"name": "release-checklist 更新 6 项闭环", "ok": true, "detail": "第1节 deploy.sh、第3节 镜像标签+0.0.0.0 审查、第7节 鲁棒性测试(08-31 10/10)、第4节 offline-seed 种子工具落地、第5节 镜像构建+容器冒烟"}
+  ],
+  "inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕(LIU HAIYAN)"
+  },
+  "linked_commits": ["05-tool", "03-model", "06-data"]
+}

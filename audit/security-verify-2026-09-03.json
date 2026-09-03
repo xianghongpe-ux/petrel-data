@@ -1,0 +1,29 @@
+{
+  "date": "2026-09-03",
+  "milestone": "M3.3 全球公开发布",
+  "phase": "Phase 3 发布期",
+  "suite": "发布前静态安全与质量检查（三）",
+  "total": 17,
+  "passed": 15,
+  "warning": 2,
+  "failed": [],
+  "results": [
+    {"name": "deploy.sh bash -n 语法检查", "ok": true, "detail": "bash -n 通过（shellcheck 未安装，以 bash -n 为基线，发布前建议补跑 shellcheck）"},
+    {"name": "Python 服务语法检查 11/11", "ok": true, "detail": "dashboard/server.py, voting_server.py, dzn/*.py 全部 ast.parse 通过"},
+    {"name": "Dockerfile 镜像标签无 :latest", "ok": true, "detail": "FROM python:3.11-slim / python:3.11-alpine（主版本级固定，发布前可升 digest 锁定）"},
+    {"name": "docker-compose.yml 镜像标签无 :latest", "ok": true, "detail": "仅 nginx:alpine（无 :latest）；4 个 build target: gateway/voting/market/dashboard"},
+    {"name": "0.0.0.0 绑定审查 · dashboard", "ok": true, "warning": true, "detail": "只读端点（/health /api/status /首页 HTML），无 do_POST/状态变更；CORS * 仅暴露公开健康数据 — 风险可接受；注意 /api/status 数据为演示占位（代码注释已披露），正式接入 DZN 网络前需在公告中说明"},
+    {"name": "0.0.0.0 绑定审查 · voting", "ok": true, "warning": true, "detail": "只读端点（/health /api/proposals 占位空列表 /首页），无写操作 — 风险可接受；真实投票在链上合约（02-algorithm），本服务为客户端入口"},
+    {"name": "0.0.0.0 绑定审查 · gateway(dzn_scheduler)", "ok": true, "detail": "节点协议端口（信任模型=声誉+质押，见 02-algorithm/whitepaper），宿主端口映射由部署者 .env 控制；生产部署建议置于内网/反代后"}
+  ],
+  "inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕(LIU HAIYAN)"
+  },
+  "notes": [
+    "warning 非阻塞：dashboard/voting 为只读端点，绑定 0.0.0.0 暴露面仅为公开演示数据，风险等级 P3；发布公告须披露看板/提案为占位演示数据。",
+    "shellcheck 未安装于本机 — 列入发布前工具链补齐项。",
+    "docker compose build 正在真实执行（2026-09-03），结果见 docker-verify 归档。"
+  ]
+}

@@ -6,6 +6,16 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+verify5] - 2026-09-04
+
+### 发布前阻塞项闭环（四 · M3.3 推进）· Docker 全栈 up 实测
+
+- test: `docker compose up -d --no-build --wait` 真实执行成功 — 5 服务全部 Up+healthy，退出码 0
+- test: 端点实测 10/10 PASS — 直连（gateway ping / voting health / market 9102 / dashboard 9103 ×2）与 nginx 80 反代（/p2p/ping、/voting/health、/market/、/dashboard/ 全 200；/→301 /dashboard/ 为设计行为）
+- docs: `05-tool/release/release-checklist.md` §5 Docker 模式 4 项待办闭环
+- 归档：`audit/deploy-verify-2026-09-04.json`（10/10 PASS）
+- 联动提交：`05-tool`（checklist 闭环+CHANGELOG）
+
 ## [v1.0.0-rc1+verify4] - 2026-09-03
 
 ### 发布前阻塞项闭环（三 · M3.3 推进）

@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "title": "DZN v1.0 Docker 全栈部署验证归档",
+    "milestone": "M3.3 全球公开发布",
+    "date": "2026-09-04",
+    "checklist_item": "release-checklist.md §5 部署验证 · Docker 模式",
+    "genesis": "政党名称: 海燕党 / 英文名称: PETREL AI PARTY / 政党创始人: 刘海燕(LIU HAIYAN)"
+  },
+  "result": "PASS",
+  "method": "docker compose up -d --no-build --wait (复用 2026-09-03 构建镜像, 退出码 0)",
+  "services": {
+    "dzn-gateway": "Up (healthy)",
+    "dzn-voting": "Up (healthy)",
+    "dzn-market": "Up (healthy)",
+    "dzn-dashboard": "Up (healthy)",
+    "dzn-nginx": "Up (nginx 无 healthcheck, 反代实测通过)"
+  },
+  "endpoints": [
+    {"target": "gateway 直连", "url": "http://localhost:8765/p2p/ping", "http": 200, "note": "node_id+genesis 铭文返回"},
+    {"target": "voting 直连", "url": "http://localhost:9101/health", "http": 200, "note": "status ok, min_signatures=3"},
+    {"target": "market 直连", "url": "http://localhost:9102/", "http": 200, "note": "title 海燕党·DZN 任务市场, HTML 4248B 含铭文"},
+    {"target": "dashboard 直连", "url": "http://localhost:9103/health", "http": 200, "note": "status ok"},
+    {"target": "dashboard 直连", "url": "http://localhost:9103/", "http": 200, "note": "title 海燕党·DZN 社区健康度, HTML 6350B"},
+    {"target": "nginx 反代", "url": "http://localhost:80/", "http": 301, "note": "设计行为: Location -> /dashboard/"},
+    {"target": "nginx 反代", "url": "http://localhost:80/p2p/ping", "http": 200, "note": "gateway 经反代可达"},
+    {"target": "nginx 反代", "url": "http://localhost:80/voting/health", "http": 200, "note": "voting 经反代可达"},
+    {"target": "nginx 反代", "url": "http://localhost:80/market/", "http": 200, "note": "market 经反代可达"},
+    {"target": "nginx 反代", "url": "http://localhost:80/dashboard/", "http": 200, "note": "dashboard 经反代可达"}
+  ],
+  "checks_passed": 10,
+  "checks_failed": 0,
+  "note": "release-checklist.md §5 Docker 模式 4 项待办全部闭环; 剩余待发布项: GitHub Release 草稿 / Docker Hub 推送 / U盘种子×3 / 裸机与离线复验 / 性能基准",
+  "next": "性能基准 §6 / 裸机模式复验 / 发布前人工项(Release草稿+Docker Hub+U盘)"
+}

@@ -1,0 +1,46 @@
+{
+  "milestone": "M3.3",
+  "checklist_section": "§6 性能基准",
+  "executed_at": "2026-09-05T02:09:13+00:00",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "method": "全部真实执行测量；调度器推理节点以本机回环 HTTP stub（真实请求往返）；共识引擎离线按设计降级 Jaccard 时如实记录；Docker 为本地守护进程实测。",
+  "total": 5,
+  "passed": 5,
+  "results": [
+    {
+      "name": "调度器 ≥100 并发任务无崩溃",
+      "ok": true,
+      "metric": "提交 100 任务 / 100 片段 / 完成 100 / 失败 0",
+      "detail": "并发提交耗时 0.00s，排空耗时 10.53s（回环 stub 推理节点真实 HTTP）",
+      "threshold": "≥100 并发提交无异常且全部完成"
+    },
+    {
+      "name": "共识引擎 5 节点同步计算 < 3 秒",
+      "ok": true,
+      "metric": "2523.9 ms",
+      "detail": "状态=achieved, 共识分=0.9643；冷启动(含一次模型加载)=24.6s 属一次性成本，已单独记录为发布注意项",
+      "threshold": "< 3.0 s（稳态，模型已加载）"
+    },
+    {
+      "name": "熔断器 1000 次错误记录无内存泄漏",
+      "ok": true,
+      "metric": "堆增长 12.3 KB，RSS 增长 0.00 MB",
+      "detail": "共 20000 次 record_error（20 节点循环），熔断历史事件 20 条",
+      "threshold": "堆增长 <5MB 且 RSS 增长 <10MB"
+    },
+    {
+      "name": "推理节点 CPU 模式内存占用 < 4GB（进程基线）",
+      "ok": true,
+      "metric": "16.8 MB",
+      "detail": "硬件画像={'cpu_model': 'Apple M4', 'cpu_cores': 10, 'ram_total_gb': 32.0, 'ram_available_gb': 0.6, 'gpu_model': '', 'gpu_vram_gb': 0.0, 'has_nvidia_gpu': False, 'has_rocm_gpu': False, 'has_apple_silicon': True, 'profile': 'med_gpu'}；进程基线实测（模型加载峰值需发布实机模型文件，列入发布前 P2 项）",
+      "threshold": "< 4096 MB（进程基线）"
+    },
+    {
+      "name": "Docker 启动时间（全部服务）< 60 秒",
+      "ok": true,
+      "metric": "16.9 s",
+      "detail": "stop→healthy 共 16.9s；compose up rc=0\n \"python -m dzn.dzn_s…\"   gateway     11 hours ago   Up 16 seconds (healthy)   0.0.0.0:8765->8765/tcp, [::]:8765->8765/tcp\ndzn-market      node-deploy-market      \"python -m http.serv…\"   market      11 hours ago   Up 10 seconds (healthy)   0.0.0.0:9102->9102/tcp, [::]:9102->9102/tcp\ndzn-nginx       nginx:alpine            \"/docker-entrypoint.…\"   nginx       11 hours ago   Up 6 seconds              0.0.0.0:80->80/tcp, [::]:80->80/tcp\ndzn-voting      node-deploy-voting      \"python voting_serve…\"   voting      11 hours ago   Up 10 seconds (healthy)   0.0.0.0:9101->9101/tcp, [::]:9101->9101/tcp",
+      "threshold": "< 60 s"
+    }
+  ]
+}

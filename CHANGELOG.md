@@ -6,6 +6,14 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+perf] - 2026-09-05
+
+### 发布前性能基准归档（M3.3 §6 实检 5/5）
+
+- test: `audit/bench-perf-2026-09-05.json` 归档 — 调度器 100 并发任务 100/100 完成无崩溃 / 共识引擎 5 节点稳态 2.52s（<3s；冷启动含模型加载 24.6s 一次性成本）/ 熔断器 20000 次错误堆 +12.3KB 无泄漏 / 推理节点 CPU 基线 16.8MB / Docker 全栈启动 16.9s（<60s）
+- fix: 基准暴露 P1 — `InferenceNode()` 默认构造崩溃，03-model 源 + 05-tool 部署副本同步修复（联动 03-model/05-tool commit）
+- docs: `05-tool/release/release-checklist.md` §6 性能基准闭环
+
 ## [v1.0.0-rc1+verify5] - 2026-09-04
 
 ### 发布前阻塞项闭环（四 · M3.3 推进）· Docker 全栈 up 实测

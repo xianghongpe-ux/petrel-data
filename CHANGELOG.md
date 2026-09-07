@@ -6,6 +6,16 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+baremetal] - 2026-09-07
+
+### 裸机+离线模式发布验证归档（M3.3 §5 实检 7/7）
+
+- test: `audit/baremetal-offline-verify-2026-09-07.json` 归档 — **7/7 PASS**：全新 venv pip 安装 rc=0 / 调度器裸机启动 0.1s / 推理节点裸机启动 `/health` `/info` 200 / GPU 降级 has_nvidia_gpu=False 不崩溃 / DZN-SEED 20 文件结构完整 + offline-verify.sh 4/4 PASS / 裸机·离线路径可执行网络命令 0 条（Docker deploy.sh `docker pull` 3 条为已知人类项）
+- fix: 裸机实测暴露 P1 — `inference_node.py` CLI `--backend auto` 抛 ValueError 崩溃 → BackendType 新增 AUTO（03-model 源 + 05-tool 部署副本同步，pytest 55/55）
+- fix: `generate-seed.py` 补写种子 README.md（与离线规格目录一致）
+- docs: `05-tool/release/release-checklist.md` §5 裸机 4/4 + 离线 3/3 全部闭环
+- 联动提交：`03-model`（AUTO 修复）、`05-tool`（验证脚本+checklist+生成器修复）
+
 ## [v1.0.0-rc1+perf] - 2026-09-05
 
 ### 发布前性能基准归档（M3.3 §6 实检 5/5）

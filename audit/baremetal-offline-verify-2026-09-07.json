@@ -1,0 +1,65 @@
+{
+  "milestone": "M3.3",
+  "checklist_section": "§5 裸机模式 + 离线模式",
+  "executed_at": "2026-09-07T02:16:35+00:00",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "method": "全部真实执行：全新 venv pip 安装；调度器/推理节点真实子进程启动+HTTP 复测；HardwareDetector.detect() 实调验证 GPU 降级；种子真实生成+offline-verify.sh 真实执行+静态扫描。",
+  "environment": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "python": "Python 3.11.15",
+    "nvidia_smi_present": false
+  },
+  "total": 7,
+  "passed": 7,
+  "results": [
+    {
+      "name": "pip install -r requirements.txt 全部成功",
+      "ok": true,
+      "metric": "rc=0 · 耗时 0.8s",
+      "detail": "依赖版本: aiohttp==3.14.3; numpy==2.4.6; psutil==7.2.2; py-cpuinfo==9.0.0; scikit-learn==1.9.0; sentence-transformers==6.0.1",
+      "threshold": "rc=0 且六项依赖全部可解析"
+    },
+    {
+      "name": "python dzn_scheduler.py 启动无报错",
+      "ok": true,
+      "metric": "启动标记 0.1s 内出现",
+      "detail": "日志含「DZN Scheduler 已启动」",
+      "threshold": "启动无异常退出且输出启动标记"
+    },
+    {
+      "name": "python dzn/inference_node.py 启动硬件检测正常",
+      "ok": true,
+      "metric": "/health 200 且 /info 200",
+      "detail": "listening 标记出现；/health → 200；/info → 200 ⏎ /info body: {\"genesis\": \"\\u5929\\u4e0b\\u5174\\u4ea1\\uff0c\\u5339\\u592b\\u6709\\u8d23\\u3002\\u7b97\\u529b\\u867d\\u5fae\\uff0c\\u4f17\\u5fd7\\u53ef\\u57ce\\u3002\", \"node_id\": \"node_da0cdccf40c7\", \"hardware\": {\"cpu_model\": \"Apple M4\", \"cpu_cores\": 10, \"ram_total_gb\": 32.0, \"ram_available_gb\": 1.6, \"gpu_model\": \"\", \"gpu_vram_gb\": 0.0, \"has_nvidia_gpu\": false, \"has_rocm_gpu\": false, \"has_apple_silicon\": true, \"profile\": \"med_gp",
+      "threshold": "进程启动、HTTP 服务就绪、/health /info 返回 200"
+    },
+    {
+      "name": "GPU 检测（nvidia-smi）降级处理正常",
+      "ok": true,
+      "metric": "cpu_cores=10, profile=HardwareProfile.MEDIUM_GPU, has_nvidia_gpu=False",
+      "detail": "nvidia-smi 存在=False; 硬件画像={'cpu_model': 'Apple M4', 'cpu_cores': 10, 'ram_total_gb': 32.0, 'ram_available_gb': 1.7, 'gpu_model': '', 'gpu_vram_gb': 0.0, 'has_nvidia_gpu': False, 'has_rocm_gpu': False, 'has_apple_silicon': True, 'profile': 'med_gpu'}",
+      "threshold": "nvidia-smi 缺失时不崩溃、has_nvidia_gpu=False、降级 profile 生效"
+    },
+    {
+      "name": "U盘目录结构完整（DZN-SEED/ 标准布局）",
+      "ok": true,
+      "metric": "文件数 20 · 缺 0",
+      "detail": "GENESIS 含三项标识=True；缺项: 无；文件清单: ['.dzn-seed', 'GENESIS.txt', 'README.md', 'config/bootstrap-peers.txt', 'config/node-config.yaml', 'docker/Dockerfile', 'docker/docker-compose.yml', 'docker/nginx.conf', 'docs/architecture.md', 'docs/quick-start.md', 'dzn/__init__.py', 'dzn/ai_output_lock.py', 'dzn/dzn_scheduler.py', 'dzn/inference_node.py', 'dzn/model_consensus.py', 'keys/ca-cert.pem', 'keys/node-key.pem', 'scripts/deploy.sh', 'scripts/offline-verify.sh', 'scripts/run-node.sh']",
+      "threshold": "19+ 文件、必需路径全在、GENESIS.txt 含政党名称/英文/创始人"
+    },
+    {
+      "name": "offline-verify.sh 校验通过",
+      "ok": true,
+      "metric": "rc=0 · 耗时 0.1s",
+      "detail": "══════════════════════════════════════════\n  DZN 协议种子 · 离线完整性验证\n══════════════════════════════════════════\n[1/4] 检查目录结构...\n  ✓ 目录结构完整\n[2/4] 校验创世铭文...\n  ✓ 创世铭文完整\n[3/4] 校验文件哈希...\n  ✓ 哈希全部一致\n[4/4] 检查 DZN 代码语法...\n  ✓ 语法通过\n══════════════════════════════════════════\n  ✅ PASS — 种子完整，可离线部署\n══════════════════════════════════════════",
+      "threshold": "rc=0 且输出 PASS/通过（结构/铭文/哈希/语法）"
+    },
+    {
+      "name": "无网络依赖：代码/依赖本地可用",
+      "ok": true,
+      "metric": "裸机/离线可执行网络命令引用 0 条",
+      "detail": "裸机/离线黑启动路径（dzn/*.py、scripts/run-node.sh、offline-verify.sh）无 git clone/pip/wget/curl 等可执行网络命令（0 条: 无）。Docker 方案 deploy.sh 含 docker pull 镜像拉取 3 条（['scripts/deploy.sh:66: docker pull python:3.11-slim', 'scripts/deploy.sh:67: docker pull python:3.11-alpine', 'scripts/deploy.sh:68: docker pull nginx:alpine']）— 属 Docker 模式已知人类项，离线时需预置本地镜像；说明性文档引用 2 条（纯文档提示，非运行依赖）。代码内 http:// 均为运行时局域网寻址（调度器/对等节点地址，由部署者提供）。Python 依赖离线安装仍需本地 wheel/已有解释器；3 个 U 盘物理拷贝为发布当天人工项。",
+      "threshold": "裸机/离线黑启动脚本与代码无可执行网络安装或拉取命令"
+    }
+  ]
+}

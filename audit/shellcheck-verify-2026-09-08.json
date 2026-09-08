@@ -1,0 +1,50 @@
+{
+  "milestone": "M3.3",
+  "checklist_section": "§1 代码完整性 — shellcheck 工具链补齐（发布前工具链项）",
+  "executed_at": "2026-09-08T02:10:00+00:00",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "genesis": "政党名称「海燕党」/ 英文「PETREL AI PARTY」/ 创始人「刘海燕(LIU HAIYAN)」",
+  "method": "全部真实执行：docker pull koalaman/shellcheck:stable 后对 05-tool 全部 shell 脚本逐文件跑 shellcheck -x；发现 2 个脚本 4 类问题并真实修复（补 shebang / 死变量 SC2034 / &&|| 隐患 SC2015 / venv activate SC1091 豁免）；修复后 bash -n 语法回归 + mirror-sync.sh --status 只读实跑行为验证。",
+  "environment": {
+    "platform": "macOS-26.6.2-arm64",
+    "shellcheck": "koalaman/shellcheck:stable (docker) sha256:bb596a0d169b85ddd81d8b6d3a2ff6d5baf5fca10b97f575ebc647c3dff62b3d",
+    "note": "本机无 brew/shellcheck 二进制，采用 docker 容器执行（网络可达 docker.io）"
+  },
+  "total": 3,
+  "passed": 3,
+  "results": [
+    {
+      "name": "node-deploy/deploy.sh shellcheck",
+      "ok": true,
+      "metric": "rc=0（首检即通过，未改动）",
+      "detail": "DZN 一键部署脚本：结构、引号、变量、错误处理全部符合 shellcheck 规则",
+      "threshold": "rc=0"
+    },
+    {
+      "name": "did-web/start-did-web.sh shellcheck",
+      "ok": true,
+      "metric": "rc=0（修复 1 处后通过）",
+      "detail": "SC1091(info) venv activate 静态不可跟随 → 加 `# shellcheck source=/dev/null` 豁免并注释原因（activate 由脚本上方 python3 -m venv 真实创建，运行时存在）",
+      "threshold": "rc=0"
+    },
+    {
+      "name": "ci-cd/mirror-sync/mirror-sync.sh shellcheck",
+      "ok": true,
+      "metric": "rc=0（修复 3 处后通过）",
+      "detail": "SC2148 缺 shebang → 首行补 #!/usr/bin/env bash（原仅靠 cron /bin/bash 显式调用，无 shebang，静态分析按 POSIX sh 解析 + 触发 shellcheck stdout 中文编码崩溃）；SC2034 conf_loaded 死变量 → load_config || true（保留「配置缺失仍显示状态」语义）；SC2015 `[ ] && ok || err` 隐患 → 改写为 if/else",
+      "threshold": "rc=0"
+    }
+  ],
+  "regression": {
+    "bash_n": "start-did-web.sh / mirror-sync.sh / deploy.sh 3/3 bash -n 通过",
+    "behavior": "mirror-sync.sh --status 真实执行正常：六仓库 × GitHub remote 配置正确显示（01 HEAD 0d361b9 / 02 dbc5b8f / 03 a4eee0b 与 git log 一致），无崩溃无报错"
+  },
+  "artifacts": {
+    "shell_scripts_covered": [
+      "05-tool/did-web/start-did-web.sh",
+      "05-tool/node-deploy/deploy.sh",
+      "05-tool/ci-cd/mirror-sync/mirror-sync.sh"
+    ],
+    "checklist": "05-tool/release/release-checklist.md §1"
+  }
+}

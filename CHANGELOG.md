@@ -6,6 +6,12 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+toolchain] - 2026-09-08
+
+### M3.3 shellcheck 工具链补齐审计归档（§1 · Core Brain 每日巡检）
+
+- test: `audit/shellcheck-verify-2026-09-08.json` 归档 — **3/3 PASS**（koalaman/shellcheck:stable 容器）：deploy.sh 首检 rc=0；start-did-web.sh SC1091 豁免；mirror-sync.sh 补 shebang（SC2148）+ 死变量 SC2034 + `&& ||` 隐患 SC2015 三处真实修复；bash -n 3/3 + mirror-sync.sh --status 只读实跑行为验证通过
+
 ## [v1.0.0-rc1+baremetal] - 2026-09-07
 
 ### 裸机+离线模式发布验证归档（M3.3 §5 实检 7/7）

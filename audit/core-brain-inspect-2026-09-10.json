@@ -1,0 +1,55 @@
+{
+  "milestone": "M3.3 全球公开发布",
+  "title": "Core Brain 每日推进 + 巡检（2026-09-10）",
+  "executed_at": "2026-09-10T10:40:00+00:00",
+  "runner": "Core Brain 每日 cron（无人工在场，全自动执行）",
+  "genesis": "政党名称: 海燕党 / 英文名称: PETREL AI PARTY / 政党创始人: 刘海燕(LIU HAIYAN)",
+  "method": "全部真实执行：python3 05-tool/ci-cd/genesis-guard.py 实跑铭文完整性；逐仓 git status 检查工作树；对照 release-checklist §8 与 dryrun-report 核对剩余项性质。",
+  "important_finding": {
+    "issue": "状态脚本 petrel-party-dev-team.py 的完成度显示为硬编码假数据",
+    "detail": "该脚本 current_phase 硬编码为 Phase3，Phase0/1/2 恒显示 N/N 完成，Phase3 项恒显示 🟢 —— 与真实状态无关，不可作为进度依据。",
+    "action": "本次巡检改用「真实产物 + 实跑验证」判定，不引用该脚本结论。建议后续以本快照类真实记录替代。"
+  },
+  "environment": {
+    "platform": "macOS-26.6.2",
+    "date": "2026-09-10"
+  },
+  "checks": {
+    "genesis_guard": {
+      "result": "PASS",
+      "detail": "05-tool/ci-cd/genesis-guard.py 实跑：总计 83 文件 / 通过 83 / 失败 0（较 2026-09-09 的 81/81 新增 2 文件，均通过）"
+    },
+    "git_worktree_clean": {
+      "result": "PASS",
+      "detail": "六大仓库提交后 0 未提交改动：01-constitution/02-algorithm/03-model/04-course/05-tool/06-data 全部干净"
+    },
+    "phase3_remaining": {
+      "human_decision_items": [
+        "H1 GitLab/Gitee 镜像 remote 落地 — 需平台账号 + SSH 部署密钥",
+        "H2 GitHub Release 草稿/正式发布 — 需 gh CLI 认证",
+        "H3 Docker Hub 镜像推送 — 需 Docker Hub 凭据",
+        "H4 协议种子 U 盘制作（≥3 拷贝）— 物理介质",
+        "H5 紧急联系表替换真实成员 — 依赖 M0.7 核心团队名单",
+        "H6 季度演练排期入 2026Q4 日历 — 需人工排期"
+      ],
+      "nature": "全部为人类决策/物理项；AI 只献策、不决策，需创始人/核心团队确认后推进"
+    }
+  },
+  "actions_taken_today": [
+    "新增《发布日人类决策行动手册》05-tool/release/release-day-playbook.md（13.6KB）— 将 §8 + DryRun 全部 6 项人类项压缩为「目标/前置/命令/验证/签核」行动卡，含发布日 T-1/T-0/T+1 时间线与中英双语 GitHub Release Notes 即贴文本",
+    "六大仓库各新增 README.en.md（英文版，创世铭文逐字嵌入）— 推进 M3.3「多语言」要求",
+    "release-checklist.md §8 登记行动手册就绪",
+    "六仓逐一提交（01:298f3a3 / 02:4133bed / 03:2c3faa7 / 04:8f05bd9 / 05:8cf8ab8+d9fed07 / 06:df3f674）"
+  ],
+  "blockers": [
+    "M3.3 剩余 6 项全部为人类决策/物理项，需创始人在公开看板确认后推进；技术侧已 100% 就绪"
+  ],
+  "next_steps": [
+    "多语言继续：六仓 README 之外，章程/课程的英文（或更多语言）版本可经 05-tool/translation 流水线批量产出（M4.1 前置）",
+    "02-algorithm/README.md 存在过时「[构建中]」标记（zkp/voting/sybil/debate/treasury/communication 实际均已落地）— 待订正",
+    "等待人类闭环 H1-H6 后执行 M3.3 全球公开发布"
+  ],
+  "total": 3,
+  "passed": 3,
+  "failed": 0
+}

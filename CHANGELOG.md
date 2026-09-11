@@ -6,6 +6,14 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+digestpin] - 2026-09-11
+
+### M3.3 基础镜像 digest 级锁定验证归档（§3 · Core Brain 每日巡检）
+
+- test: `audit/docker-digest-verify-2026-09-11.json` 归档 — **7/7 PASS**：① 注册表复解析 ×3（daocloud/1ms/dockerproxy 三独立源 digest 逐字节一致，与锁文件相符）② 仓库文件内 pin 相符 ×3（`Dockerfile` python:3.11-slim / python:3.11-alpine；`docker-compose.yml` nginx:alpine）③ 零残留未 pin 裸引用 ×1
+- 说明：官方 `registry-1.docker.io` 在受限网络实测不可达，归档 `note` 字段已记录该网络事实与「多源交叉验证」替代口径；digest 内容寻址，跨源一致 ⇒ 等价官方值
+- 关联：`05-tool` 同步提交（工具 `release/docker-digest-lock.py` + 锁文件 `node-deploy/docker-digest-lock.json` + 4 处 pin 回填 + checklist §3 / playbook 闭环）
+
 ## [v1.0.0-rc1+toolchain] - 2026-09-08
 
 ### M3.3 shellcheck 工具链补齐审计归档（§1 · Core Brain 每日巡检）

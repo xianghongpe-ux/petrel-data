@@ -1,0 +1,77 @@
+{
+  "_inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕 (LIU HAIYAN)"
+  },
+  "verified_at": "2026-09-11T02:05:29.964541+00:00",
+  "note": "registry-1.docker.io 在受限网络实测不可达；采用 ≥2 独立镜像源交叉验证（digest 内容寻址）",
+  "checks": [
+    {
+      "image": "library/python:3.11-slim",
+      "check": "registry_vs_lockfile",
+      "registry_digest": "sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534",
+      "locked_digest": "sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ],
+      "match": true
+    },
+    {
+      "image": "library/python:3.11-alpine",
+      "check": "registry_vs_lockfile",
+      "registry_digest": "sha256:0d55920083f1ce1e38ac292e2772f924b4f8bb4188d336c79bf66963039e6146",
+      "locked_digest": "sha256:0d55920083f1ce1e38ac292e2772f924b4f8bb4188d336c79bf66963039e6146",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ],
+      "match": true
+    },
+    {
+      "image": "library/nginx:alpine",
+      "check": "registry_vs_lockfile",
+      "registry_digest": "sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3",
+      "locked_digest": "sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ],
+      "match": true
+    },
+    {
+      "image": "library/python:3.11-slim",
+      "check": "pin_in_file",
+      "file": "Dockerfile",
+      "needle": "python:3.11-slim@sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534",
+      "match": true
+    },
+    {
+      "image": "library/python:3.11-alpine",
+      "check": "pin_in_file",
+      "file": "Dockerfile",
+      "needle": "python:3.11-alpine@sha256:0d55920083f1ce1e38ac292e2772f924b4f8bb4188d336c79bf66963039e6146",
+      "match": true
+    },
+    {
+      "image": "library/nginx:alpine",
+      "check": "pin_in_file",
+      "file": "docker-compose.yml",
+      "needle": "nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3",
+      "match": true
+    },
+    {
+      "check": "no_bare_image_refs",
+      "bare": [],
+      "match": true
+    }
+  ],
+  "passed": 7,
+  "total": 7,
+  "failures": [],
+  "verdict": "PASS"
+}

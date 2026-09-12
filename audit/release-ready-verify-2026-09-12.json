@@ -1,0 +1,82 @@
+{
+  "milestone": "M3.3 全球公开发布",
+  "title": "Core Brain 发布就绪巡检（每日 cron）",
+  "executed_at": "2026-09-12T02:05:23Z",
+  "local_time": "2026-09-12 10:05:23 CST",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "genesis": "政党名称: 海燕党 / 英文名称: PETREL AI PARTY / 政党创始人: 刘海燕(LIU HAIYAN)",
+  "method": "全部真实执行：铭文守卫全仓实跑扫描、六仓 git status 实测、pytest 实跑回归、DR-02 降级配置实读 + nginx 容器语法校验 + 真并发 HTTP 压测 + 黑启动端点复核；零 Mock",
+  "environment": {
+    "platform": "darwin (macOS 26.6.2)",
+    "docker_daemon": "available",
+    "dzn_stack": "在线（dzn-nginx / gateway / voting / market / dashboard 均 Up）"
+  },
+  "checks": {
+    "genesis_guard": {
+      "result": "PASS",
+      "detail": "05-tool/ci-cd/genesis-guard.py --ci 实跑：当日变更前基线 84/84 PASS；新增 2 份带铭文产物（release/dr02-ddos-drill.py、node-deploy/fallback/index.html）后复扫 86/86 PASS / 失败 0（较 2026-09-10 的 83 增 3）"
+    },
+    "git_worktree_clean": {
+      "result": "PASS",
+      "detail": "六大仓库 0 未提交改动：01-constitution / 02-algorithm / 03-model / 04-course / 05-tool / 06-data 全部干净"
+    },
+    "regression_tests": {
+      "result": "PASS",
+      "detail": "03-model pytest 55 passed in 1.19s；05-tool pytest 34 passed in 0.03s"
+    },
+    "dr02_ddos_degradation": {
+      "result": "PASS",
+      "detail": "DR-02 季度演练 12/12 PASS。实压证据：基线串行 8/8 = 200；并发 120 → 200×54 / 429×66 / 连接错误 0，耗时 0.053s。归档 06-data/audit/dr02-ddos-drill-2026-09-12.json",
+      "deployed": "降级配置已上线在线 DZN 栈，核验 /health /fallback/ /dashboard/ /p2p/ping /voting/ /market/ 6/6 = 200"
+    },
+    "release_checklist": {
+      "sections_1_to_7": "全部 ✅ 已闭环",
+      "section_8_open_items": [
+        {
+          "item": "GitHub Release 草稿已创建",
+          "type": "HUMAN_DECISION",
+          "reason": "需 gh token / 发布负责人确认版本与日期；cron 无凭据且不得替人类决定发布时点"
+        },
+        {
+          "item": "Docker Hub 镜像推送测试成功",
+          "type": "HUMAN_DECISION",
+          "reason": "需 Docker Hub 账号凭据；digest 锁定与三源交叉验证等软件侧已验证"
+        },
+        {
+          "item": "协议种子 U 盘制作完成（至少 3 个拷贝）",
+          "type": "HUMAN_PHYSICAL",
+          "reason": "物理介质制作；软件侧 generate-seed / offline-verify 已实测可用，物理拷贝属发布当天人工项"
+        },
+        {
+          "item": "P1 #1 GitLab/Gitee remote 落地",
+          "type": "HUMAN_DECISION",
+          "reason": "需平台账号开通并提供 SSH 部署密钥；sync_config.yaml 已预留注释行"
+        },
+        {
+          "item": "P2 #4 紧急联系表替换真实核心成员",
+          "type": "HUMAN_DECISION",
+          "reason": "待 M0.7 核心团队名单由人类确认后填充，当前为占位名（Alice/Bob 等）"
+        }
+      ],
+      "dryrun_leftover_human_items": [
+        "P1 #1 GitLab/Gitee remote — 平台账号 + SSH 部署密钥（人类）",
+        "P2 #4 紧急联系表真实成员（人类）"
+      ]
+    }
+  },
+  "actions_taken_today": [
+    "DR-02 DDoS 降级保护落地：新增 node-deploy/nginx-zones.conf（http 级限流 zone + 连接限制 + geo IP 白名单）+ 升级 nginx.conf（全代理端点 limit_req / /health 最小存活端点 / /fallback/ 静态兜底页 / 静态资源 7 天 CDN TTL）+ 新增 fallback/index.html（含创世铭文）+ docker-compose.yml 补 2 个只读挂载",
+    "新增 release/dr02-ddos-drill.py 四阶段真实演练脚本并实跑 12/12 PASS",
+    "降级配置上线在线 DZN 栈（docker compose create/start nginx），6/6 端点复验 200",
+    "release-checklist.md：§8 新增 DR-02 部署+实测条目；P2 #5 由「排期建议」升级为「已执行（2026-09-12 实演 12/12 PASS）」",
+    "disaster-recovery.md：演练计划表改为真实状态表（修正原表 Q2=DR-02 与 checklist 2026-09 排期的口径不一致，记录实际 Q3 执行）；填入 DR-02 真实演练记录（阶段结论/耗时/4 项改进项）",
+    "CHANGELOG 更新：05-tool（[Unreleased] 2026-09-12）与 06-data（[v1.0.0-rc1+dr02] 2026-09-12）"
+  ],
+  "blockers": [
+    "人类决策项（AI 只献策不决策）：核心成员公网 IP 白名单填写（geo 块留白，未伪造已配置）；官网 DNS/CDN 高防切换需账号操作；季度演练排期入团队日历确认；GitHub Release 草稿创建；Docker Hub 推送；GitLab/Gitee remote 与 SSH 密钥；紧急联系表真实成员",
+    "DZN 官网域名 dzn.petrel-ai.org 尚未实际部署，本次演练覆盖协议层（节点部署包）降级兜底，官网边缘防护待人类确定托管方案"
+  ],
+  "total": 4,
+  "passed": 4,
+  "failed": 0
+}

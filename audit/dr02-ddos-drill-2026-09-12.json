@@ -1,0 +1,102 @@
+{
+  "milestone": "M3.3 全球公开发布",
+  "exercise": "DR-02 官网被 DDoS · 季度降级演练（2026Q3）",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "genesis": "政党名称: 海燕党 / 英文名称: PETREL AI PARTY / 政党创始人: 刘海燕(LIU HAIYAN)",
+  "method": "全部真实执行：配置实读 + nginx 容器语法校验 + 真并发压测 + 黑启动端点复核；零 Mock",
+  "executed_at": "2026-09-12T02:04:23.333356+00:00",
+  "environment": {
+    "platform": "darwin",
+    "drill_port": 8899,
+    "drill_network": "node-deploy_dzn-net",
+    "isolation": "独立演练容器，不触碰在线 dzn-nginx"
+  },
+  "phase_a_config_audit": [
+    {
+      "item": "A1 限流 zone 定义（http 级）",
+      "result": "PASS",
+      "detail": "limit_req_zone=3 个, limit_conn_zone=有, geo 白名单=有"
+    },
+    {
+      "item": "A2 限流拒绝码语义化 429",
+      "result": "PASS",
+      "detail": "limit_req_status/limit_conn_status = 429 (RFC 6585)"
+    },
+    {
+      "item": "A3 全部代理端点启用限流",
+      "result": "PASS",
+      "detail": "代理端点 ['/dashboard/', '/market/', '/p2p/', '/voting/']；已限流 ['/dashboard/', '/fallback/', '/market/', '/p2p/', '/voting/']"
+    },
+    {
+      "item": "A4 /health 最小存活端点（后端无关）",
+      "result": "PASS",
+      "detail": "location = /health → return 200 \"PETREL-DZN-ALIVE\"，无 proxy_pass"
+    },
+    {
+      "item": "A5 降级静态兜底页（含创世铭文）",
+      "result": "PASS",
+      "detail": "location /fallback/=有；页面文件=存在；创世铭文=三标识齐备"
+    },
+    {
+      "item": "A6 静态资源 7 天 CDN TTL",
+      "result": "PASS",
+      "detail": "Cache-Control: public, max-age=604800, immutable"
+    },
+    {
+      "item": "A7 单 IP 并发连接上限",
+      "result": "PASS",
+      "detail": "server 级 limit_conn conn_per_ip 50"
+    },
+    {
+      "item": "A8 核心 IP 白名单留白端正",
+      "result": "PASS",
+      "detail": "私有网段为真实值；核心成员公网 IP 留白待人类填入（未伪造已配置）"
+    }
+  ],
+  "phase_b_config_validate": {
+    "result": "PASS",
+    "rc": 0,
+    "detail": "ocker-entrypoint.d/10-listen-on-ipv6-by-default.sh\n10-listen-on-ipv6-by-default.sh: info: can not modify /etc/nginx/conf.d/default.conf (read-only file system?)\n/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh\n/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh\n/docker-entrypoint.sh: Configuration complete; ready for start up\nnginx: the configuration file /etc/nginx/nginx.conf syntax is ok\nnginx: configuration file /etc/nginx/nginx.conf test is successful"
+  },
+  "phase_c_rate_limit": {
+    "concurrency": 120,
+    "burst_seconds": 0.053,
+    "status_distribution": {
+      "200": 54,
+      "429": 66
+    },
+    "rate_limited_count": 66,
+    "passed_through_count": 54,
+    "connection_errors": 0,
+    "baseline_sequential_200": "8/8",
+    "result": "PASS",
+    "detail": "基线串行 8/8 通过；并发 120 → 200×54 / 429×66 / 连接错误×0，耗时 0.053s (rate=20r/s burst=60 nodelay，超限即 429)"
+  },
+  "phase_d_fallback": {
+    "health_endpoint": {
+      "sample": {
+        "200": 5
+      },
+      "body": "PETREL-DZN-ALIVE",
+      "result": "PASS",
+      "detail": "5/5 → 200，响应体 'PETREL-DZN-ALIVE'（不依赖后端）"
+    },
+    "fallback_page": {
+      "status": 200,
+      "elapsed_ms": 1.8,
+      "contains_genesis": true,
+      "result": "PASS",
+      "detail": "/fallback/ → 200，2ms，含创世铭文=是"
+    }
+  },
+  "total": 12,
+  "passed": 12,
+  "failed": 0,
+  "blocked": 0,
+  "overall": "PASS",
+  "human_items": [
+    "核心成员公网 IP 白名单为人类决策项（geo 块留白，未伪造已配置）",
+    "官网 DNS/CDN 切换（Cloudflare/高防）需人类账号操作，演练仅覆盖协议层兜底",
+    "季度演练排期入日历（P2 #5）需人类确认，本演练提供可复用脚本与证据"
+  ]
+}

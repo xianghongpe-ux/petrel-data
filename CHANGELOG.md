@@ -6,6 +6,14 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+dr02] - 2026-09-12
+
+### M3.3 DR-02 DDoS 降级演练证据归档（§8 / P2 #5 · Core Brain 每日巡检）
+
+- test: `audit/dr02-ddos-drill-2026-09-12.json` 归档 — **12/12 PASS**：① 配置审计 8 项（限流 zone 定义 / 429 语义化 / 全代理端点限流 / 后端无关 `/health` / 含创世铭文的静态兜底页 / 7 天 CDN TTL / 单 IP 连接上限 / IP 白名单留白端正）② `nginx -t` 配置语法校验 successful ③ **实压限流** 基线串行 8/8 = 200；并发 120 → 200×54 / 429×66 / 连接错误 0，耗时 0.053s ④ 黑启动兜底 `/health` 5/5 = 200（体 `PETREL-DZN-ALIVE`）/ `/fallback/` 200 含创世铭文
+- test: `audit/release-ready-verify-2026-09-12.json` 归档 — 当日巡检：铭文守卫全仓 **86/86 PASS**（当日变更前基线 84，新增 2 份带铭文产物后复扫 86；2026-09-10 为 83）；六仓 `git status --short` 全干净；`03-model` pytest 55 passed、`05-tool` pytest 34 passed
+- 说明：所有数值为真实执行测量（真起 nginx 容器 + 真并发 HTTP 压测），零 Mock；无法由 cron 代办的人类项（核心成员 IP、DNS/CDN 账号、排期确认）如实标 HUMAN_DECISION 提报
+
 ## [v1.0.0-rc1+digestpin] - 2026-09-11
 
 ### M3.3 基础镜像 digest 级锁定验证归档（§3 · Core Brain 每日巡检）

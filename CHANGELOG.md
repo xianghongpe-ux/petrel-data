@@ -6,6 +6,14 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+testgate] - 2026-09-13
+
+### M3.3 Core Brain 每日巡检证据归档（含新发现的发布阻塞项）
+
+- test: `audit/release-ready-verify-2026-09-13.json` 归档 — 当日巡检：铭文守卫六仓全扫 **208/208 PASS**（01=16 · 02=37 · 03=16 · 04=36 · 05=88 · 06=15）；修复 1 项 CI 阻塞铭文缺陷；Docker Hub 发布软能力实跑 4/4 PASS
+- test: `audit/dockerhub-publish-2026-09-13.json` 归档 — `--dry-run` 将 gateway/voting/market/dashboard 打标为 `petrelai/petrel-*:v1.0.0-rc1`，独立复核 4/4 存在、四容器 healthy；`--verify` 4/4 TAGGED
+- test: `audit/test-gate-2026-09-13.json` 归档 — 回归测试门首次实跑 **226 passed / 2 failed**（02-algorithm 137 passed 2 failed · 03-model 55 passed · 05-tool 34 passed）；2 个失败用例已登记为发布阻塞项（电路引擎缺陷 + 陈旧投票用例）
+
 ## [v1.0.0-rc1+dr02] - 2026-09-12
 
 ### M3.3 DR-02 DDoS 降级演练证据归档（§8 / P2 #5 · Core Brain 每日巡检）

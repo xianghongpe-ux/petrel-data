@@ -1,0 +1,42 @@
+{
+  "_inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕 (LIU HAIYAN)"
+  },
+  "generated_at": "2026-09-13T02:15:13.595689+00:00",
+  "generator": "05-tool/release/test-gate.py",
+  "repos": {
+    "02-algorithm": {
+      "passed": 137,
+      "failed": 2,
+      "rc": 1,
+      "summary": "2 failed, 137 passed in 2.24s",
+      "failed_cases": [
+        "tests/test_voting.py::TestBallotBox::test_double_vote_rejected",
+        "tests/test_zkp.py::TestHalo2Circuit::test_membership_circuit_synthesis"
+      ]
+    },
+    "03-model": {
+      "passed": 55,
+      "failed": 0,
+      "rc": 0,
+      "summary": "55 passed in 1.22s",
+      "failed_cases": []
+    },
+    "05-tool": {
+      "passed": 34,
+      "failed": 0,
+      "rc": 0,
+      "summary": "34 passed in 0.04s",
+      "failed_cases": []
+    }
+  },
+  "totals": {
+    "passed": 226,
+    "failed": 2,
+    "repos_tested": 3,
+    "repos_with_failures": 1
+  },
+  "result": "FAIL"
+}

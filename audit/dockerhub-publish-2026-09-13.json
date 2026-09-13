@@ -1,0 +1,76 @@
+{
+  "_inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕 (LIU HAIYAN)"
+  },
+  "generated_at": "2026-09-13T02:11:27.587260+00:00",
+  "generator": "05-tool/release/dockerhub-publish.py",
+  "mode": "verify",
+  "namespace": "petrelai",
+  "version": "v1.0.0-rc1",
+  "compose_project": "node-deploy",
+  "docker_server": "29.4.3",
+  "services": [
+    {
+      "service": "gateway",
+      "source": "node-deploy-gateway:latest",
+      "target": "petrelai/petrel-gateway:v1.0.0-rc1",
+      "source_id": "sha256:c8fde391e388",
+      "status": "TAGGED"
+    },
+    {
+      "service": "voting",
+      "source": "node-deploy-voting:latest",
+      "target": "petrelai/petrel-voting:v1.0.0-rc1",
+      "source_id": "sha256:b7b1d8f8f089",
+      "status": "TAGGED"
+    },
+    {
+      "service": "market",
+      "source": "node-deploy-market:latest",
+      "target": "petrelai/petrel-market:v1.0.0-rc1",
+      "source_id": "sha256:2825cc7e7b72",
+      "status": "TAGGED"
+    },
+    {
+      "service": "dashboard",
+      "source": "node-deploy-dashboard:latest",
+      "target": "petrelai/petrel-dashboard:v1.0.0-rc1",
+      "source_id": "sha256:3a19e5712d15",
+      "status": "TAGGED"
+    }
+  ],
+  "push_requires": "HUMAN: docker login + 发布日时间决策",
+  "pinned_base_images": [
+    {
+      "key": "python-slim",
+      "pin": "python:3.11-slim@sha256:9534e5a8e315485d4061ed659af0fd78a284c015f9b73661b41d6bab25604534",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ]
+    },
+    {
+      "key": "python-alpine",
+      "pin": "python:3.11-alpine@sha256:0d55920083f1ce1e38ac292e2772f924b4f8bb4188d336c79bf66963039e6146",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ]
+    },
+    {
+      "key": "nginx-alpine",
+      "pin": "nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3",
+      "sources": [
+        "1ms",
+        "daocloud",
+        "dockerproxy"
+      ]
+    }
+  ],
+  "result": "PASS",
+  "failures": []
+}

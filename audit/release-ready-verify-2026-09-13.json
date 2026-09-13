@@ -1,0 +1,81 @@
+{
+  "milestone": "M3.3 全球公开发布",
+  "title": "Core Brain 发布就绪巡检（每日 cron）",
+  "executed_at": "2026-09-13T02:15:54Z",
+  "local_time": "2026-09-13 10:15:54 CST",
+  "runner": "Core Brain 每日巡检 cron（无人工在场，全自动执行）",
+  "genesis": "政党名称: 海燕党 / 英文名称: PETREL AI PARTY / 政党创始人: 刘海燕(LIU HAIYAN)",
+  "method": "全部真实执行：铭文守卫六仓全扫实跑、六仓 git status 实测、pytest 回归实跑（新增 test-gate 门）、docker 镜像本地打标+独立复核、容器健康 inspect、电路缺陷独立复算诊断；零 Mock",
+  "environment": {
+    "platform": "darwin (macOS 26.6.2)",
+    "docker_daemon": "available (server 29.4.3)",
+    "dzn_stack": "在线（dzn-gateway/voting/market/dashboard 均 healthy；dzn-nginx Up）"
+  },
+  "checks": {
+    "genesis_guard_full_sweep": {
+      "result": "PASS",
+      "detail": "六仓全扫实跑：01=16/16 · 02=37/37 · 03=16/16 · 04=36/36 · 05=88/88 · 06=15/15，合计 208/208 PASS，失败 0（较 2026-09-12 的 207 增 1，为新增 release/test-gate.py 纳入）"
+    },
+    "genesis_defect_fixed": {
+      "result": "FIXED",
+      "detail": "发现并修复 CI 阻塞缺陷：02-algorithm/voting/deploy_vote_sepolia.py 前 20 行缺失三项创世铭文（guard 要求含 海燕党|PETREL AI PARTY|刘海燕|LIU HAIYAN），`--ci` 模式退出码非零。已按仓库惯用框图样式补齐铭文与最高原则；修复后 py_compile OK + guard 37/37 PASS"
+    },
+    "git_worktree_clean": {
+      "result": "PASS_AT_START",
+      "detail": "巡检开始时六大仓库 0 未提交改动（上一日提交闭环）；本日改动已提交见 actions_taken_today"
+    },
+    "regression_tests": {
+      "result": "FAIL",
+      "detail": "新增回归测试门 05-tool/release/test-gate.py：226 passed / 2 failed（02-algorithm 137 passed 2 failed；03-model 55 passed；05-tool 34 passed；01/04/06 无测试目录）。归档 06-data/audit/test-gate-2026-09-13.json",
+      "failures": [
+        {
+          "case": "tests/test_zkp.py::TestHalo2Circuit::test_membership_circuit_synthesis",
+          "verdict": "ENGINE_DEFECT",
+          "root_cause": "独立复算证实见证/实例四项检查全部 OK（叶哈希 / Merkle 根 / nullifier / 公钥 逐一比对相等），失败点为 verify_all_gates() 返回 False。根因：门模型无「逐行 selector 使能」概念，verify_all_gates 对 range(self.n)=16 行全部强制执行全部门，未填充行（advice 全 0）必然违反 HASH 门；且 MERKLE_STEP 门 inputs=[TEMP,TEMP] 读同一行，结构上无法表达 TEMP[row+1]=H(children[row])",
+          "fix_required": "引入逐行使能（selector 固定列）+ 跨行（next-row）访问，属电路引擎级改造"
+        },
+        {
+          "case": "tests/test_voting.py::TestBallotBox::test_double_vote_rejected",
+          "verdict": "STALE_TEST_VS_DESIGN",
+          "root_cause": "BallotBox 去重键为 (voter_nullifier, option_index)，源码注释明示「支持多选」；用例断言单选语义（同 nullifier 换 option 应拒绝）→ 断言与已泛化设计冲突。真正的重复投票防护在 kernel 层 nullifier 注册表（voting_kernel.cast_vote → verifier.verify_and_mark），其用例 test_double_vote_prevented / test_single_choice_rejects_multiple 均 PASS。故非安全漏洞",
+          "fix_required": "人类定夺：改用例以匹配多选原语，或在 BallotBox 增加显式单选模式；涉及投票语义，AI 不代决"
+        }
+      ]
+    },
+    "dockerhub_publish_readiness": {
+      "result": "PASS",
+      "detail": "新增 05-tool/release/dockerhub-publish.py 并实跑 --dry-run：gateway/voting/market/dashboard 四镜像本地打标为 petrelai/petrel-*:v1.0.0-rc1，打标后逐个 image inspect 复验存在（独立 `docker images` 复核 4/4），四容器 health=healthy；--verify 只读复验 4/4 TAGGED。归档 06-data/audit/dockerhub-publish-2026-09-13.json。人类发布日仅需 docker login + 一条 --push",
+      "leverage": "把「Docker Hub 推送」这一人类凭据项，拆为 AI 可实测的本地打标/复验部分 + 人类一步推送"
+    },
+    "release_checklist": {
+      "sections_1_to_7": "全部 ✅ 已闭环（§1 已附 2026-09-13 补充发现，如实标注原『代码完整性』仅覆盖语法检查）",
+      "new_blocker_registered": "§8 顶部新增 🛑 发布阻塞项（2 个单元测试失败，未闭环前不得发布）",
+      "section_8_open_items": [
+        {"item": "GitHub Release 草稿已创建", "type": "HUMAN_DECISION", "reason": "需 gh token / 发布负责人确认版本与日期"},
+        {"item": "Docker Hub 镜像推送测试成功", "type": "HUMAN_DECISION_STEP", "reason": "本地打标+复验已由工具实测闭环；仅剩 docker login 凭据与发布时点属人类"},
+        {"item": "协议种子 U 盘制作完成（至少 3 个拷贝）", "type": "HUMAN_PHYSICAL", "reason": "物理介质制作"},
+        {"item": "P1 #1 GitLab/Gitee remote 落地", "type": "HUMAN_DECISION", "reason": "需平台账号开通并提供 SSH 部署密钥"},
+        {"item": "P2 #4 紧急联系表替换真实核心成员", "type": "HUMAN_DECISION", "reason": "待 M0.7 核心团队名单由人类确认"}
+      ]
+    }
+  },
+  "actions_taken_today": [
+    "修复 02-algorithm/voting/deploy_vote_sepolia.py 创世铭文缺失（CI 阻塞缺陷）：补齐三项标识 + 最高原则框图头，py_compile OK，guard 由 36/37 → 37/37 PASS",
+    "新增 05-tool/release/dockerhub-publish.py（Docker Hub 发布工具）：源镜像校验 → 本地打标 → 复验 → 推送 → 归档；实跑 --dry-run 4/4 PASS，--verify 4/4 TAGGED，归档 06-data/audit/dockerhub-publish-2026-09-13.json",
+    "新增 05-tool/release/test-gate.py（回归测试门）：将 pytest 纳入发布闸门，失败即非零退出；实跑 226 passed / 2 failed，归档 06-data/audit/test-gate-2026-09-13.json",
+    "独立诊断 2 个长期潜伏的单元测试失败（均出于首个提交 959384b）：电路引擎缺陷 + 陈旧用例，写入 checklist §1 补充发现，并在 §8 登记为发布阻塞项",
+    "release-checklist.md：§8 Docker Hub 条目补充「技术软能力已就绪」；§8 顶部新增发布阻塞项；§1 补充「代码完整性仅覆盖语法检查」的如实标注",
+    "release-day-playbook.md：H3 Docker Hub 段改为工具化「一条命令」流程，取代原手工 for 循环",
+    "CHANGELOG 更新：05-tool（[Unreleased] 2026-09-13）与 02-algorithm"
+  ],
+  "blockers": [
+    "🛑 发布阻塞（工程必修）：Halo2 电路引擎 verify_all_gates 缺逐行驶能 + MERKLE_STEP 门无法跨行 → test_membership_circuit_synthesis 失败",
+    "🛑 发布阻塞（人类定夺）：BallotBox 单选语义歧义 → test_double_vote_rejected 失败；kernel 层防护完好，需人类选择改用例或为 BallotBox 增单选模式",
+    "人类决策项（AI 只献策不决策）：GitHub Release 草稿创建；Docker Hub 推送凭据与发布时点；GitLab/Gitee remote 与 SSH 密钥；紧急联系表真实成员；物理 U 盘制作；核心成员公网 IP 白名单填写"
+  ],
+  "total": 6,
+  "passed": 4,
+  "failed": 2,
+  "passed_detail": "genesis_guard_full_sweep / genesis_defect_fixed / dockerhub_publish_readiness / git_worktree_clean",
+  "failed_detail": "regression_tests（2 个用例，已登记为发布阻塞项）"
+}

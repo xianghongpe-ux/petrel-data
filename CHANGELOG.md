@@ -6,6 +6,14 @@
 > 创世铭文：政党名称「海燕党」、英文「PETREL AI PARTY」、创始人「刘海燕(LIU HAIYAN)」
 > 三项标识永久嵌入本仓库最底层，任何人不得删除、替换或裁剪。
 
+## [v1.0.0-rc1+circuitfix] - 2026-09-14
+
+### M3.3 Core Brain 每日巡检证据归档 — 发布阻塞项闭环 1/2
+
+- test: `audit/test-gate-2026-09-14.json` 归档 — 回归测试门复跑 **227 passed / 1 failed**（02-algorithm 138 passed 1 failed · 03-model 55 passed · 05-tool 34 passed）；较 2026-09-13 的 226/2 净减 1 项失败（Halo2 电路引擎缺陷修复）
+- test: `audit/zkp-circuit-fix-2026-09-14.json` 归档 — 电路引擎缺陷修复证据（根因 4 项：无逐行使能 / MERKLE_STEP 无法跨行 / nullifier 门输出自指 / 公钥门误读固定列；修复：新增 `Gate.active_rows` 逐行使能 + `Gate.output_row_offset` 跨行访问 + `HASH1`/`INSTANCE_EQUALITY` 门类型，`MembershipCircuit` 重构为 14 门真实校验链）
+- 残留 1 项发布阻塞：`test_voting.py::TestBallotBox::test_double_vote_rejected` — 陈旧用例 vs 多选原语，属**人类定夺**（投票语义），AI 不代决
+
 ## [v1.0.0-rc1+testgate] - 2026-09-13
 
 ### M3.3 Core Brain 每日巡检证据归档（含新发现的发布阻塞项）

@@ -1,0 +1,81 @@
+{
+  "_inscription": {
+    "party": "海燕党",
+    "party_en": "PETREL AI PARTY",
+    "founder": "刘海燕 (LIU HAIYAN)",
+    "supreme_principle": "AI只献策、不决策；机器只辅助、不掌权；人类终局终审。"
+  },
+  "record": "Halo2 电路引擎缺陷修复 — 发布阻塞项闭环（1/2）",
+  "date": "2026-09-14",
+  "generator": "Core Brain 每日巡检（petrel-party-dev-team）",
+  "release_gate": "05-tool/release/test-gate.py",
+  "target_file": "02-algorithm/zkp/halo2_circuit.py",
+  "first_commit": "959384b",
+  "blocking_test": "tests/test_zkp.py::TestHalo2Circuit::test_membership_circuit_synthesis",
+
+  "before": {
+    "algorithm_pytest": "137 passed / 2 failed",
+    "repo_gate": "226 passed / 2 failed",
+    "gate_result": "FAIL"
+  },
+  "after": {
+    "algorithm_pytest": "138 passed / 1 failed",
+    "repo_gate": "227 passed / 1 failed",
+    "gate_result": "FAIL",
+    "blocking_test_status": "PASS",
+    "remaining_failure": "tests/test_voting.py::TestBallotBox::test_double_vote_rejected (人类定夺项，未改动)"
+  },
+
+  "root_cause": [
+    {
+      "id": "RC-1",
+      "summary": "门模型无逐行使能",
+      "detail": "verify_all_gates() 对 range(self.n) 全部 64 行强制全部门；除第 0 行（及 Merkle 中间行）外均为未填充行（值 0），任何哈希门在未填充行必然违约。"
+    },
+    {
+      "id": "RC-2",
+      "summary": "MERKLE_STEP 门无法跨行",
+      "detail": "原 inputs=[COL_MERKLE_TEMP, COL_MERKLE_TEMP]（同行同列）、输出亦为同列，结构上不可能表达 temp[k+1] = H(temp[k], sibling[k])。"
+    },
+    {
+      "id": "RC-3",
+      "summary": "nullifier 门输出自指",
+      "detail": "G1 inputs=[member_id, secret_key, nullifier] 而 output=nullifier，等式 output==H(...output...) 永不成立；正确语义应为 H(member_id, secret_key, voting_round)。"
+    },
+    {
+      "id": "RC-4",
+      "summary": "公钥门把固定列当见证列读",
+      "detail": "G2 inputs=[COL_SECRET_KEY, COL_FIXED_ZERO]，而 COL_FIXED_ZERO=0 在 get_advice 下实为 COL_MEMBER_ID；且语义应为单输入 H(secret_key)。"
+    }
+  ],
+
+  "fix": [
+    "Gate 新增 active_rows (逐行使能, None=全行, 向后兼容旧电路) 与 output_row_offset (跨行输出)，配套 is_active_at()",
+    "verify_gate() 增加使能判定、跨行输出行、越界保护",
+    "新增 GateType.HASH1 (单输入哈希) 与 GateType.INSTANCE_EQUALITY (见证列 vs 实例列, 支持 instance_row 解耦读取行)",
+    "MembershipCircuit 重构为 14 门真实校验链：行0五项(叶哈希/nullifier/公钥/签名/temp[0]接续) + 逐层跨行 MERKLE_STEP(方向位决定左右序) + 行depth根锚定 + 四路公开输入一致性",
+    "新增见证列 voting_round / merkle_sibling / merkle_direction",
+    "VotingCircuit 范围检查门限定第 0 行使能"
+  ],
+
+  "verification": {
+    "commands": [
+      "python3 -m pytest tests/ -q    # 于 02-algorithm",
+      "python3 test-gate.py           # 于 05-tool/release"
+    ],
+    "golden_values_checked": {
+      "merkle_temp[0] == leaf_hash": true,
+      "merkle_temp[depth] == instance.merkle_root": true,
+      "advice_nullifier == instance.nullifier": true,
+      "advice_public_key == instance.public_key": true,
+      "advice_voting_round == instance.voting_round": true
+    }
+  },
+
+  "human_decision_pending": {
+    "item": "tests/test_voting.py::TestBallotBox::test_double_vote_rejected",
+    "nature": "陈旧用例 vs 已泛化的多选原语 — 非安全漏洞（kernel 层 nullifier 注册表防护完好且已测试通过）",
+    "options": ["改用例以匹配多选语义", "BallotBox 增加单选模式"],
+    "policy": "涉及投票语义，AI 不代决，等待人类终审"
+  }
+}
